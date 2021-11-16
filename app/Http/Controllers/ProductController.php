@@ -36,13 +36,20 @@ class ProductController extends ApiResponseController
         $path = 'products';
         $image_uploaded_path = $file->store($path, 'public');
         $input['product_image'] = URL::to('').'/storage/'.$image_uploaded_path;
+        $input['product_slug'] = str_replace(' ','-',$request->product_name).'-'.$request->product_price;
+    
         $product = Product::create($input);
+        
+
         return $this->handleResponse(new ProductResource($product), 'Product created!');
+
+        
     }
 
    
     public function show($id)
     {
+        
         $product = Product::find($id);
         if (is_null($product)) {
             return $this->handleError('Product not found!');
@@ -57,7 +64,6 @@ class ProductController extends ApiResponseController
         $validator = Validator::make($input, [
             'product_description' => 'required',
             'product_price' => 'required',
-            'product_image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'product_name' => 'required',
         ]);
 
@@ -67,9 +73,11 @@ class ProductController extends ApiResponseController
         }
 
         $product = Product::find($id);
+
+     
         if($product){
             if($request->file('product_image')){
-                
+             
                 $file = $request->file('product_image');
                 //save image
                 $path = 'products';
@@ -79,6 +87,7 @@ class ProductController extends ApiResponseController
                 $product->product_name = $input['product_name'];
                 $product->product_price = $input['product_price'];
                 $product->product_description = $input['product_description'];
+                $product->product_slug = str_replace(' ','-',$request->product_name).'-'.$request->product_price;
                 $product->save();
 
                 return $this->handleResponse(new ProductResource($product), 'Product successfully updated!');
@@ -88,6 +97,7 @@ class ProductController extends ApiResponseController
                 $product->product_name = $input['product_name'];
                 $product->product_price = $input['product_price'];
                 $product->product_description = $input['product_description'];
+                $product->product_slug = str_replace(' ','-',$request->product_name).'-'.$request->product_price;
                 $product->save();
 
                 return $this->handleResponse(new ProductResource($product), 'Product successfully updated!');

@@ -35,6 +35,10 @@ const store = new Vuex.Store({
         },
         saveUser(state, user) {
             state.user = user;
+        },
+        resetUserState(state){
+            state.token = null;
+            state.user = null;
         }
     },
     actions: {

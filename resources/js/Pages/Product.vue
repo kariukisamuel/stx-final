@@ -4,27 +4,18 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <img src="images/1.jpg" alt="boot" class="img-fluid" />
+                    <img :src="product.product_image" alt="boot" class="img-fluid" />
 
                 </div>
                 <div class="p-3 col-md-6">
 
-                    <h5 class="product-title">Fashion Men's Boots</h5>
-                    <p>Brand: <span class="text-secondary">Fashion</span></p>
-                    <p>Galaxy A12 combines streamlined design aesthetics with classic colors. Refined curves make it
-                        comfortable to hold and provides easy screen navigation. Choose from Black, Red and Blue colors.
-                        Expand your view to the 6.5-inch Infinity-V Display of Galaxy A12 and see what you've been
-                        missing.
-                        Thanks to HD+ technology, your everyday content looks sharp, crisp and clear. Similar to human
-                        eye
-                        sight, the 5MP Ultra Wide Camera sees the world with a 123-degree angle of view, adding more
-                        perspective to everything you shoot. Place your order for this amazing product from Jumia Kenya
-                        and
-                        have it delivered to your doorstep at an amazing price</p>
+                    <h5 class="product-title">{{product.product_name}}</h5>
+                    <!-- <p>Brand: <span class="text-secondary">Fashion</span></p> -->
+                    <p>{{product.product_description}}</p>
                     <div class="border-bottom w-100"></div>
-                    <h5 class="my-2">Ksh 3,000</h5>
+                    <h5 class="my-2">$ {{product.product_price}}</h5>
                     <div class="my-3">
-                        <button type="button" class="btn btn-dark btn-lg btn-block my-2">Add To Cart</button>
+                        <button type="button" class="btn btn-dark btn-lg btn-block my-2">Buy</button>
 
                     </div>
 
@@ -37,6 +28,22 @@
 </template>
 <script>
     export default {
+        mounted() {
+           this.id = this.$route.query.id
+           this.fetchProduct(this.id)
+        },
+        data(){
+            return {
+              product:'',
+              id:''
+            }
+        },
+        methods: {
+            async fetchProduct() {
+                let products = await axios.get(`products/${this.id}`)
+                this.product = products.data.data
+            }
+        }
 
     }
 

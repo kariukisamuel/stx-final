@@ -18,7 +18,8 @@ class CreateOrdersTable extends Migration
             $table->string('user_id');
             $table->string('product_id');
             $table->longtext('product_quantity');
-            $table->longtext('product_total');
+            $table->integer('product_product_total');
+            $table->string('payment_status');
             $table->timestamps();
         });
     }

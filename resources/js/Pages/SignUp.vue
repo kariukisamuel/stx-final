@@ -75,7 +75,9 @@
 
                 this.responseMessage = user.data
 
-                if(this.responseMessage.success){
+                if (this.responseMessage.success) {
+                    this.$store.commit('saveUser', this.name)
+                    this.$store.commit('saveToken', this.token)
                     this.$router.push('/manage-products')
                 }
 

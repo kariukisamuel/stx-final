@@ -4,22 +4,9 @@
 
             <div class="row">
 
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
+                <product-card :id="product.id" :image="product.product_image" :title="product.product_name" :price="product.product_price" :slug="product.product_slug" v-for="(product,index) in products.data" :key="index">
                 </product-card>
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
-                </product-card>
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
-                </product-card>
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
-                </product-card>
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
-                </product-card>
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
-                </product-card>
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
-                </product-card>
-                <product-card image="images/1.jpg" title="Fashion Men's Boots" price="Kshs 3000" slug="/">
-                </product-card>
+
 
             </div>
         </div>
@@ -30,6 +17,20 @@
     export default {
         components: {
             ProductCard
+        },
+        data() {
+            return {
+                products: '',
+            }
+        },
+        mounted() {
+            this.fetchProduct()
+        },
+        methods: {
+            async fetchProduct() {
+                let products = await axios.get('products')
+                this.products = products.data
+            },
         }
     }
 

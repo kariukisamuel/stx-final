@@ -14,6 +14,9 @@ class order extends Model
         'product_id',
         'product_quantity',
         'product_total',
+        'payment_status'
     ];
+
+
     
 }
