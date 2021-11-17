@@ -29,7 +29,10 @@
                         :hidePostalCode="hidePostalCode" @token="tokenCreated">
                     </stripe-element-card>
                 </div>
-                <button class="btn btn-dark btn-block my-2" @click="submit">Pay ${{getPrice}}</button>
+                <button class="btn btn-dark btn-block my-2" @click="submit" :disabled="processing">
+                    <span v-if="processing">Processing...</span>
+                    <span v-else>Pay ${{getPrice}}</span>
+                </button>
             </div>
         </div>
     </div>
@@ -58,7 +61,8 @@
             token: null,
             charge: null,
             hidePostalCode: true,
-            responseMessage: ''
+            responseMessage: '',
+            processing: false
         }),
         computed: {
             ...mapGetters(['getEmail', 'getPrice', 'getUser'])
@@ -68,6 +72,7 @@
                 this.$refs.stripeRef.submit();
             },
             tokenCreated(token) {
+                this.processing = true;
                 this.token = token;
                 this.charge = {
                     source: token.id,

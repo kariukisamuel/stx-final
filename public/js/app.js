@@ -2987,6 +2987,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3000,7 +3003,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       token: null,
       charge: null,
       hidePostalCode: true,
-      responseMessage: ''
+      responseMessage: '',
+      processing: false
     };
   },
   computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapGetters)(['getEmail', 'getPrice', 'getUser'])),
@@ -3009,6 +3013,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.$refs.stripeRef.submit();
     },
     tokenCreated: function tokenCreated(token) {
+      this.processing = true;
       this.token = token;
       this.charge = {
         source: token.id
@@ -41093,7 +41098,7 @@ var render = function () {
               _vm._l(_vm.products.data, function (product, index) {
                 return _c("tr", { key: index }, [
                   _c("th", { attrs: { scope: "row" } }, [
-                    _vm._v(_vm._s(index)),
+                    _vm._v(_vm._s(index + 1)),
                   ]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(product.product_slug))]),
@@ -41748,9 +41753,14 @@ var render = function () {
             "button",
             {
               staticClass: "btn btn-dark btn-block my-2",
+              attrs: { disabled: _vm.processing },
               on: { click: _vm.submit },
             },
-            [_vm._v("Pay $" + _vm._s(_vm.getPrice))]
+            [
+              _vm.processing
+                ? _c("span", [_vm._v("Processing...")])
+                : _c("span", [_vm._v("Pay $" + _vm._s(_vm.getPrice))]),
+            ]
           ),
         ]),
       ]
