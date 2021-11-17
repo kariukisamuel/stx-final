@@ -141,7 +141,7 @@
                 </thead>
                 <tbody v-if="products">
                     <tr v-for="(product,index) in products.data" :key="index">
-                        <th scope="row">{{index}}</th>
+                        <th scope="row">{{index + 1}}</th>
                         <td>{{product.product_slug}}</td>
                         <td><img :src="product.product_image" style="width:150px"></td>
                         <td>{{product.product_name}}</td>

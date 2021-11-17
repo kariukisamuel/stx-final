@@ -77,13 +77,15 @@ class ProductController extends ApiResponseController
      
         if($product){
             if($request->file('product_image')){
-             
+                
                 $file = $request->file('product_image');
                 //save image
+
                 $path = 'products';
                 $image_uploaded_path = $file->store($path, 'public');
                 $input['product_image'] = URL::to('').'/storage/'.$image_uploaded_path;
-
+                
+                $product->product_image = $input['product_image'];
                 $product->product_name = $input['product_name'];
                 $product->product_price = $input['product_price'];
                 $product->product_description = $input['product_description'];
