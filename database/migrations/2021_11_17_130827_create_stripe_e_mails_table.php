@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStripePaymentsTable extends Migration
+class CreateStripeEMailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateStripePaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stripe_payments', function (Blueprint $table) {
+        Schema::create('stripe_e_mails', function (Blueprint $table) {
             $table->id();
+            $table->string('email');
+            $table->string('stripe_customer_id');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreateStripePaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stripe_payments');
+        Schema::dropIfExists('stripe_e_mails');
     }
 }

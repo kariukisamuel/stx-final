@@ -15,7 +15,8 @@
                     <div class="border-bottom w-100"></div>
                     <h5 class="my-2">$ {{product.product_price}}</h5>
                     <div class="my-3">
-                        <button type="button" class="btn btn-dark btn-lg btn-block my-2">Buy</button>
+                        <button type="button" class="btn btn-dark btn-lg btn-block my-2"
+                            @click="navigateToEmail">Buy</button>
 
                     </div>
 
@@ -29,19 +30,25 @@
 <script>
     export default {
         mounted() {
-           this.id = this.$route.query.id
-           this.fetchProduct(this.id)
+            this.id = this.$route.query.id
+            this.fetchProduct(this.id)
         },
-        data(){
+        data() {
             return {
-              product:'',
-              id:''
+                product: '',
+                id: ''
             }
         },
         methods: {
             async fetchProduct() {
                 let products = await axios.get(`products/${this.id}`)
                 this.product = products.data.data
+            },
+            navigateToEmail() {
+                this.$store.commit('saveTotalPrice', this.product.product_price)
+                this.$router.push({
+                    name: 'Email',
+                });
             }
         }
 

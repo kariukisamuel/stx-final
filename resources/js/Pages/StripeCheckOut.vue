@@ -4,11 +4,32 @@
 
         <div class="d-flex justify-content-center align-items-center h-100">
             <div class="w-50 card p-5">
-                <h5>Pay With Stripe</h5>
-                <stripe-element-card ref="elementsRef" :pk="publishableKey" :amount="amount" locale="en"
-                    @token="tokenCreated" @loading="loading = $event">
-                </stripe-element-card>
-                <button class="btn btn-dark btn-block my-5" @click="submit">Pay ${{amount / 100}}</button>
+                <h5 class="text-center mb-3">Pay With Stripe</h5>
+                <div class="alert alert-danger" role="alert" v-if="responseMessage.success == false">
+
+                    {{Object.values(responseMessage.message)}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-success" role="alert" v-if="responseMessage.success">
+
+                    {{responseMessage.message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="text" class="form-control" :value="getEmail">
+                </div>
+                <div class="mb-3">
+                    <label>Card Details</label>
+                    <stripe-element-card ref="stripeRef" :pk="publishableKey" locale="en"
+                        :hidePostalCode="hidePostalCode" @token="tokenCreated">
+                    </stripe-element-card>
+                </div>
+                <button class="btn btn-dark btn-block my-2" @click="submit">Pay ${{getPrice}}</button>
             </div>
         </div>
     </div>
@@ -23,44 +44,58 @@
         StripeElementCard
     } from '@vue-stripe/vue-stripe';
 
+    import {
+        mapGetters
+    } from 'vuex'
 
     export default {
-        name: 'Test',
+        name: 'Stripe',
         components: {
             StripeElementCard
         },
         data: () => ({
-            loading: false,
-            amount: 1000,
-            publishableKey: 'pk_test_TYooMQauvdEDq54NiTphI7jx', //process.env.PUBLISHABLE_KEY, 
+            publishableKey: 'pk_test_51JuFtbLu2uOjyahsq3sYgTXvsANcHtHYnIMFFWpfsC6vEOWGpKXuJr3ZfrXLka6rl8bquqQSYciK2IgHEeXIMlkm00NJPG1ECv',
             token: null,
-            charge: null
+            charge: null,
+            hidePostalCode: true,
+            responseMessage: ''
         }),
-
+        computed: {
+            ...mapGetters(['getEmail', 'getPrice', 'getUser'])
+        },
         methods: {
             submit() {
-                console.log('submit called. . . ', this.token, this.charge,
-
-                )
-                this.$refs.elementsRef.submit();
-
+                this.$refs.stripeRef.submit();
             },
             tokenCreated(token) {
                 this.token = token;
-                // for additional charge objects go to https://stripe.com/docs/api/charges/object
                 this.charge = {
                     source: token.id,
-                    amount: this
-                        .amount, // the amount you want to charge the customer in cents. $100 is 1000 (it is strongly recommended you use a product id and quantity and get calculate this on the backend to avoid people manipulating the cost)
-                    description: this
-                        .description // optional description that will show up on stripe when looking at payments
                 }
                 this.sendTokenToServer(this.charge);
             },
-            sendTokenToServer(charge) {
-                // Send to charge to your backend server to be processed
-                // Documentation here: https://stripe.com/docs/api/charges/create
+            async sendTokenToServer(charge) {
+                let response = await axios.post('stripe-payments', {
+                    token: charge.source,
+                    amount: this.getPrice,
+                    currency: 'usd',
+                    email: this.getEmail,
+                    payment_interval: 0
+                })
+                this.responseMessage = response.data
 
+                if (response.data.success) {
+   
+                        axios.post('send-mail', {
+                            to: this.getEmail,
+                            email_title: `Succesful payment Of ${this.getPrice} dollars has been made to Staxo group`,
+                            email_body: 'Hello,'
+                        })
+                        this.$router.push({
+                            name: 'success'
+                        })
+                
+                }
             }
         }
 

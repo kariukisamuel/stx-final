@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\stripeEMails;
 
-class StripeEmailsController extends Controller
+class StripeEMailsController extends Controller
 {
-    //
+    public static function store($email){
+        $email = stripeEMails::create($email);
+        return $email;
+    }
 }

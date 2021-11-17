@@ -12,6 +12,7 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import store from './Store/index'
+import VueSweetalert2 from 'vue-sweetalert2';
 
 window.axios.defaults.baseURL = 'http://localhost:8000/api/v1'
 
@@ -20,6 +21,7 @@ import { routes } from './Routes/index';
 Vue.use(VueRouter)
 
 Vue.use(VueAxios, axios)
+Vue.use(VueSweetalert2);
 
 //Register Routes
 export const router = new VueRouter({

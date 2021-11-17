@@ -30,6 +30,6 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('register', [UserController::class, 'register']);
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{id}', [ProductController::class, 'show']);
-    Route::get('stripe-payment', [StripePaymentsController::class, 'processPayment']);
+    Route::post('stripe-payments', [StripePaymentsController::class, 'processPayment']);
     Route::post('send-mail', [EmailController::class, 'sendMail'] );
 });

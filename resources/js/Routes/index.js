@@ -5,6 +5,7 @@ import Product from '../Pages/Product.vue'
 import SignUp from '../Pages/SignUp.vue'
 import Email from '../Pages/Email.vue'
 import Stripe from '../Pages/StripeCheckOut.vue'
+import ThankYou from '../Pages/ThankYou.vue'
 import Cookies from 'js-cookie'
 
 
@@ -68,6 +69,11 @@ export const routes = [{
         path: '/stripe-check-out',
         component: Stripe,
         name: 'Stripe',
+    },
+    {
+        path: '/stripe-success',
+        component: ThankYou,
+        name: 'success',
     },
 
 ];

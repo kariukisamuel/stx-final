@@ -49,8 +49,12 @@
                                         <input type="text" class="form-control" id="productPrice"
                                             v-model="productPrice">
                                     </div>
-                                    <button type="button" @click="saveProduct"
-                                        class="btn btn-dark btn-block">Save</button>
+                                    <div class="d-flex">
+                                        <button type="button" @click="saveProduct"
+                                            class="btn btn-dark btn-block mr-3">Save</button>
+                                        <button type="button" class="btn btn-warning"
+                                            data-dismiss="modal">Cancel</button>
+                                    </div>
                                 </form>
                             </div>
 
@@ -110,9 +114,12 @@
                                         <input type="text" class="form-control" id="productPrice"
                                             :value="product.product_price" :ref="`updateProductPrice${product.id}`">
                                     </div>
-
-                                    <button type="button" @click="updateProduct(product.id)"
-                                        class="btn btn-dark btn-block">Save</button>
+                                    <div class="d-flex">
+                                        <button type="button" @click="updateProduct(product.id)"
+                                            class="btn btn-dark btn-block mr-3">Save</button>
+                                        <button type="button" class="btn btn-warning"
+                                            data-dismiss="modal">Cancel</button>
+                                    </div>
                                 </form>
                             </div>
 
@@ -205,9 +212,9 @@
                 })
                 this.responseMessage = product.data
                 this.productTitle = '',
-                this.productDescription = '',
-                this.productPrice = '',
-                this.fetchProduct()
+                    this.productDescription = '',
+                    this.productPrice = '',
+                    this.fetchProduct()
 
             },
             async fetchProduct() {
@@ -228,8 +235,8 @@
                 let productPrice = this.$refs[productPriceRef]
                 let productDescription = this.$refs[productDescriptionRef]
                 let productTitle = this.$refs[productTitleRef]
-                
-              
+
+
 
                 if (productImage[0].files[0] != undefined) {
                     formData.append('product_image', productImage[0].files[0])
@@ -248,14 +255,34 @@
             },
 
             async deleteProduct(id) {
-                let product = await axios.delete(`/products/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${this.getToken}`
+
+
+                this.$swal({
+                    title: 'Are you sure you want to delete this product?',
+                    text: 'You can\'t revert your action',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes Delete it!',
+                    cancelButtonText: 'No, Keep it!',
+                    showCloseButton: true,
+                    showLoaderOnConfirm: true
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete(`/products/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${this.getToken}`
+                            }
+                        }).then((product) => {
+                            this.responseMessage = product.data
+                            this.products = ''
+                            this.fetchProduct()
+                        })
+                        this.$swal('Deleted', 'You successfully deleted this product', 'success')
+                    } else {
+                        this.$swal('Cancelled', 'Your product is still intact', 'info')
                     }
                 })
-                this.responseMessage = product.data
-                this.products = ''
-                this.fetchProduct()
+
             }
 
         }
